@@ -20,7 +20,7 @@ import plotly.express as px
 import streamlit as st
 
 
-APP_VERSION = "V0.9 SaaS Hospital Concept"
+APP_VERSION = "V1.0 SaaS Hospital Concept"
 
 NAV_ITEMS = [
     "CEO Dashboard",
@@ -662,27 +662,34 @@ st.markdown(
     }
 
 
-    .nav-grid-card {
+    .module-bar-wrap {
         background: white;
         border: 1px solid #e2e8f0;
         border-radius: 18px;
-        padding: 18px;
-        min-height: 130px;
+        padding: 12px;
+        margin: 12px 0 18px 0;
         box-shadow: 0 8px 22px rgba(15,23,42,.045);
+    }
+
+    .module-bar-title {
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 850;
         margin-bottom: 8px;
     }
 
-    .nav-grid-title {
-        color: #0f172a;
-        font-size: 17px;
-        font-weight: 950;
-        margin-bottom: 6px;
-    }
-
-    .nav-grid-sub {
-        color: #64748b;
-        font-size: 12px;
-        line-height: 1.45;
+    .module-active-label {
+        background: linear-gradient(135deg, #2563eb, #4f46e5);
+        color: white;
+        border-radius: 12px;
+        padding: 10px 12px;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 900;
+        min-height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .sidebar-mini-title {
@@ -932,7 +939,7 @@ st.markdown(
     """
     <div class="concept-box">
         <div class="concept-title">
-            <strong>V0.9 Konsept:</strong> Bu ekran hastane direktörü, genel müdür ve yönetim ekibinin sabah tek bakışta
+            <strong>V1.0 Konsept:</strong> Bu ekran hastane direktörü, genel müdür ve yönetim ekibinin sabah tek bakışta
             hastanenin finansal, operasyonel ve kalite durumunu görmesi için tasarlanmıştır.
         </div>
     </div>
@@ -941,39 +948,45 @@ st.markdown(
 )
 
 # =========================================================
-# Main Navigation Cards
+# Persistent Module Bar
 # =========================================================
-def render_main_navigation():
-    st.markdown('<div class="section-title">Modüller</div>', unsafe_allow_html=True)
+def render_module_bar():
+    st.markdown(
+        '<div class="module-bar-wrap"><div class="module-bar-title">Modül Geçişleri</div>',
+        unsafe_allow_html=True,
+    )
 
     nav_cards = [
-        ("🏠", "CEO Dashboard", "Sabah brifingi, hastane sağlık skoru ve yönetici özeti."),
-        ("💰", "Finans Merkezi", "Branş gelirleri, kârlılık, kanal dağılımı ve hasta başı gelir."),
-        ("👨‍⚕️", "Doktor Intelligence", "Doktor performansı, gelir, memnuniyet ve tetkik katkısı."),
-        ("🏥", "Operasyon", "Bekleme süresi, doluluk, kapasite ve operasyon ısı haritası."),
-        ("🎯", "Yönetim Toplantısı", "Haftalık yönetici özeti, gündem ve rapor indirme."),
-        ("🙂", "Kalite & Hasta Deneyimi", "Şikayet, çözüm süresi, memnuniyet ve kalite riskleri."),
-        ("👥", "Hasta Analitiği", "Yeni hasta, sadık hasta, kaybedilen hasta ve segmentler."),
-        ("📦", "Stok & Satın Alma", "Kritik stok, SKT riski ve önerilen sipariş."),
-        ("🤖", "AYÇA Co-Pilot", "Seçmeli veri asistanı; yalnızca cevaplanabilir sorular."),
+        ("🏠", "CEO Dashboard"),
+        ("💰", "Finans Merkezi"),
+        ("👨‍⚕️", "Doktor Intelligence"),
+        ("🏥", "Operasyon"),
+        ("🎯", "Yönetim Toplantısı"),
+        ("🙂", "Kalite & Hasta Deneyimi"),
+        ("👥", "Hasta Analitiği"),
+        ("📦", "Stok & Satın Alma"),
+        ("🤖", "AYÇA Co-Pilot"),
     ]
 
-    cols = st.columns(3)
-    for i, (icon, title, sub) in enumerate(nav_cards):
-        with cols[i % 3]:
-            st.markdown(
-                f"""
-                <div class="nav-grid-card">
-                    <div class="icon-circle i-blue">{icon}</div>
-                    <div class="nav-grid-title">{title}</div>
-                    <div class="nav-grid-sub">{sub}</div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
-            if st.button(f"Aç → {title}", key=f"main_nav_{title}", use_container_width=True):
-                goto(title)
+    cols = st.columns(9)
+    for i, (icon, title) in enumerate(nav_cards):
+        with cols[i]:
+            if st.session_state.active_page == title:
+                st.markdown(
+                    f'<div class="module-active-label">{icon} {title}</div>',
+                    unsafe_allow_html=True,
+                )
+            else:
+                short_title = title.replace("Kalite & Hasta Deneyimi", "Hasta Deneyimi").replace("Doktor Intelligence", "Doktor").replace("Yönetim Toplantısı", "Toplantı").replace("Stok & Satın Alma", "Stok")
+                if st.button(f"{icon} {short_title}", key=f"module_bar_{title}", use_container_width=True):
+                    goto(title)
 
+    st.markdown('</div>', unsafe_allow_html=True)
+
+
+
+
+render_module_bar()
 
 # =========================================================
 # Question cards
@@ -1025,8 +1038,6 @@ def render_question_cards(context="main"):
 # =========================================================
 def render_ceo_dashboard():
     section_header("CEO Dashboard", "Yönetici Özeti")
-
-    render_main_navigation()
 
     st.markdown(
         f"""
