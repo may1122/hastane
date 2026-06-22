@@ -20,7 +20,7 @@ import plotly.express as px
 import streamlit as st
 
 
-APP_VERSION = "V0.6 SaaS Hospital Concept"
+APP_VERSION = "V0.8 SaaS Hospital Concept"
 
 NAV_ITEMS = [
     "CEO Dashboard",
@@ -427,12 +427,30 @@ st.markdown(
         text-align: left;
         justify-content: flex-start;
         box-shadow: 0 4px 12px rgba(15,23,42,.025);
+        padding-left: 14px;
+        font-size: 14px;
     }
 
     section[data-testid="stSidebar"] .stButton > button:hover {
         background: #eff6ff;
         border-color: #bfdbfe;
         color: #1d4ed8;
+    }
+
+    .active-nav-pill {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: white !important;
+        border-radius: 12px;
+        padding: 11px 14px;
+        font-weight: 900;
+        margin: 6px 0;
+        box-shadow: 0 10px 22px rgba(37,99,235,.22);
+        font-size: 14px;
+    }
+
+    .passive-nav-label {
+        color: #334155;
+        font-weight: 800;
     }
 
     .brief-hero {
@@ -582,6 +600,67 @@ st.markdown(
     .heat-low { background:#dcfce7; color:#166534; }
     .heat-mid { background:#fef3c7; color:#92400e; }
     .heat-high { background:#ffe4e6; color:#be123c; }
+
+    .assistant-category {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        padding: 18px;
+        box-shadow: 0 8px 22px rgba(15,23,42,.045);
+        min-height: 118px;
+        margin-bottom: 10px;
+    }
+
+    .assistant-category-title {
+        color: #0f172a;
+        font-size: 17px;
+        font-weight: 950;
+        margin-bottom: 6px;
+    }
+
+    .assistant-category-sub {
+        color: #64748b;
+        font-size: 12px;
+        line-height: 1.45;
+    }
+
+    .assistant-answer {
+        background: linear-gradient(135deg, #eff6ff, #f8fafc);
+        border: 1px solid #bfdbfe;
+        border-radius: 18px;
+        padding: 20px;
+        margin-top: 16px;
+        box-shadow: 0 8px 22px rgba(15,23,42,.04);
+    }
+
+    .assistant-answer-title {
+        color: #1e3a8a;
+        font-size: 20px;
+        font-weight: 950;
+        margin-bottom: 8px;
+    }
+
+    .assistant-answer-main {
+        color: #0f172a;
+        font-size: 24px;
+        font-weight: 950;
+        margin-bottom: 8px;
+    }
+
+    .assistant-answer-text {
+        color: #334155;
+        font-size: 14px;
+        line-height: 1.55;
+    }
+
+    .assistant-source {
+        color: #64748b;
+        font-size: 12px;
+        margin-top: 12px;
+        border-top: 1px solid #dbeafe;
+        padding-top: 10px;
+    }
+
 </style>
 """,
     unsafe_allow_html=True,
@@ -702,7 +781,7 @@ with st.sidebar:
     st.markdown('<div class="ayca-sub">Hospital Analytics</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="version-badge">{APP_VERSION}</div>', unsafe_allow_html=True)
     st.markdown(
-        '<div class="sidebar-org"><div class="sidebar-org-title">HG Hospital</div><div class="sidebar-org-sub">Premium Plan · Yönetici Paneli</div></div>',
+        '<div class="sidebar-org"><div class="sidebar-org-title">HG Hospital</div><div class="sidebar-org-sub">Yönetici Paneli · Demo Veri</div></div>',
         unsafe_allow_html=True,
     )
 
@@ -719,10 +798,12 @@ with st.sidebar:
         "AYÇA Co-Pilot": "🤖",
     }
     for item in NAV_ITEMS:
-        prefix = "●" if st.session_state.active_page == item else menu_icons.get(item, "•")
-        label = f"{prefix} {item}"
-        if st.button(label, key=f"side_{item}", use_container_width=True):
-            goto(item)
+        icon = menu_icons.get(item, "•")
+        if st.session_state.active_page == item:
+            st.markdown(f'<div class="active-nav-pill">{icon} {item}</div>', unsafe_allow_html=True)
+        else:
+            if st.button(f"{icon} {item}", key=f"side_{item}", use_container_width=True):
+                goto(item)
 
     st.divider()
     st.caption("Veri Dosyası")
@@ -824,21 +905,13 @@ st.markdown(
     """
     <div class="concept-box">
         <div class="concept-title">
-            <strong>V0.6 Konsept:</strong> Bu ekran hastane direktörü, genel müdür ve yönetim ekibinin sabah tek bakışta
+            <strong>V0.8 Konsept:</strong> Bu ekran hastane direktörü, genel müdür ve yönetim ekibinin sabah tek bakışta
             hastanenin finansal, operasyonel ve kalite durumunu görmesi için tasarlanmıştır.
         </div>
     </div>
     """,
     unsafe_allow_html=True,
 )
-
-quick_cols = st.columns(5)
-quick_pages = ["CEO Dashboard", "Finans Merkezi", "Doktor Intelligence", "Yönetim Toplantısı", "AYÇA Co-Pilot"]
-for i, page in enumerate(quick_pages):
-    with quick_cols[i]:
-        if st.button(page, key=f"quick_{page}", use_container_width=True):
-            goto(page)
-
 
 # =========================================================
 # Question cards
@@ -1272,39 +1345,273 @@ def render_stock():
 
 
 def render_copilot():
-    section_header("AYÇA Co-Pilot", "Doğal dil ile yönetici karar destek asistanı")
+    section_header("AYÇA Veri Asistanı", "Serbest soru yok; sadece veriden cevaplanabilen seçmeli analizler")
 
-    brans_sum = brans.groupby("Branş", as_index=False).agg(Gelir=("Gelir", "sum"), Kar=("Kar", "sum"), Hasta=("Hasta", "sum"))
-    top_rev = brans_sum.sort_values("Gelir", ascending=False).iloc[0]
-    top_profit = brans_sum.sort_values("Kar", ascending=False).iloc[0]
-    top_complaint = kalite.sort_values("Şikayet Sayısı", ascending=False).iloc[0]
-    dsum = doktor.groupby(["Doktor", "Branş"], as_index=False).agg(Gelir=("Gelir", "sum"), Memnuniyet=("Memnuniyet %", "mean"))
-    top_doc = dsum.sort_values("Gelir", ascending=False).iloc[0]
+    brans_sum = brans.groupby("Branş", as_index=False).agg(
+        Gelir=("Gelir", "sum"),
+        Kar=("Kar", "sum"),
+        Hasta=("Hasta", "sum"),
+        Memnuniyet=("Memnuniyet %", "mean"),
+    )
+    brans_sum["Hasta Başı Gelir"] = brans_sum["Gelir"] / brans_sum["Hasta"]
+    brans_sum["Kar Marjı %"] = (brans_sum["Kar"] / brans_sum["Gelir"] * 100).fillna(0)
 
-    qa = {
-        "Bu ay ciro neden arttı?": f"Ciro artışının ana nedeni {top_rev['Branş']} branşındaki yüksek gelir katkısıdır. Bu branş {money_fmt(top_rev['Gelir'])} gelir üretmiştir.",
-        "En kârlı branş hangisi?": f"En kârlı branş {top_profit['Branş']} görünüyor. Yaklaşık {money_fmt(top_profit['Kar'])} kâr üretmiştir.",
-        "Bekleme süresi neden arttı?": f"Bekleme süresi hasta hacmi ve kapasite baskısından etkileniyor. Bugünkü toplam hasta {int_fmt(today['Toplam Hasta'])}, ortalama bekleme {int(today['Ortalama Bekleme Dk'])} dakikadır.",
-        "Hasta memnuniyeti nasıl artırılır?": f"En çok şikayet konusu '{top_complaint['Konu']}'. Bu başlıkta çözüm süresi düşürülürse memnuniyet artışı beklenir.",
-        "Hangi doktorlar öne çıkıyor?": f"Gelir açısından {top_doc['Doktor']} öne çıkıyor. Branşı {top_doc['Branş']}, toplam geliri {money_fmt(top_doc['Gelir'])}.",
-        "Hangi alanlarda risk var?": f"MR kullanım oranı {pct_fmt(today['MR Kullanım %'])}, doluluk {pct_fmt(today['Doluluk %'])}. Kapasite ve bekleme riski birlikte takip edilmelidir.",
+    dsum = doktor.groupby(["Doktor", "Branş"], as_index=False).agg(
+        Hasta=("Hasta", "sum"),
+        Gelir=("Gelir", "sum"),
+        Tetkik=("Tetkik Geliri", "sum"),
+        Memnuniyet=("Memnuniyet %", "mean"),
+        Tekrar=("Tekrar Başvuru %", "mean"),
+    )
+    dsum["Hasta Başı Gelir"] = dsum["Gelir"] / dsum["Hasta"]
+
+    latest_ops = operasyon[operasyon["Tarih"] == operasyon["Tarih"].max()].copy()
+    critical_stock = stok[stok["Durum"].isin(["Kritik", "Riskli"])].copy()
+
+    categories = {
+        "📊 Finans": {
+            "desc": "Branş geliri, kârlılık, hasta başı gelir ve gelir kanalları.",
+            "questions": [
+                "En yüksek gelirli branş hangisi?",
+                "En kârlı branş hangisi?",
+                "Hasta başı geliri en yüksek branş hangisi?",
+                "Gelir kanalı dağılımı nasıl?",
+            ],
+        },
+        "👨‍⚕️ Doktorlar": {
+            "desc": "Doktor bazlı gelir, memnuniyet, hasta sayısı ve tetkik katkısı.",
+            "questions": [
+                "En yüksek gelirli doktor kim?",
+                "Memnuniyeti en yüksek doktor kim?",
+                "Hasta başı geliri en yüksek doktor kim?",
+                "Tetkik geliri en yüksek doktor kim?",
+            ],
+        },
+        "🏥 Operasyon": {
+            "desc": "Bekleme süresi, doluluk, kapasite ve birim yoğunluğu.",
+            "questions": [
+                "En yoğun birim hangisi?",
+                "Bekleme süresi en yüksek birim hangisi?",
+                "Doluluk oranı en yüksek birim hangisi?",
+                "Bugünkü operasyonel risk nedir?",
+            ],
+        },
+        "🙂 Hasta Deneyimi": {
+            "desc": "Şikayet konuları, çözüm süresi ve memnuniyet göstergeleri.",
+            "questions": [
+                "En çok şikayet hangi konuda?",
+                "Çözüm süresi en yüksek şikayet konusu hangisi?",
+                "Hasta memnuniyeti bugün kaç?",
+                "Etki skoru en yüksek kalite problemi nedir?",
+            ],
+        },
+        "📦 Stok": {
+            "desc": "Kritik stoklar, SKT riski, stok değeri ve sipariş önerisi.",
+            "questions": [
+                "Kritik stok sayısı kaç?",
+                "SKT riski olan kaç kalem var?",
+                "En yüksek stok maliyeti hangi kalemde?",
+                "Önerilen sipariş toplamı ne kadar?",
+            ],
+        },
     }
 
-    if "copilot_question" not in st.session_state:
-        st.session_state.copilot_question = list(qa.keys())[0]
+    if "assistant_category" not in st.session_state:
+        st.session_state.assistant_category = "📊 Finans"
+    if "assistant_question" not in st.session_state:
+        st.session_state.assistant_question = categories[st.session_state.assistant_category]["questions"][0]
 
-    st.markdown('<div class="section-title">Hazır Yönetici Soruları</div>', unsafe_allow_html=True)
-    qcols = st.columns(3)
-    for i, q in enumerate(qa.keys()):
-        with qcols[i % 3]:
-            if st.button(q, key=f"copilot_q_{i}", use_container_width=True):
-                st.session_state.copilot_question = q
+    st.markdown(
+        """
+        <div class="brief-hero">
+            <div class="brief-hero-title">Kontrollü Karar Destek Asistanı</div>
+            <div class="brief-hero-sub">
+                Bu modülde serbest soru sorulmaz. Kullanıcı yalnızca sistemin elindeki veriyle doğru cevaplayabileceği analizleri seçer.
+                Böylece demo sırasında hatalı veya iddialı cevap riski ortadan kalkar.
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
-    selected = st.session_state.copilot_question
-    st.markdown("### AYÇA Yanıtı")
-    st.success(qa[selected])
+    st.markdown('<div class="section-title">Analiz Kategorisi Seç</div>', unsafe_allow_html=True)
+    cat_cols = st.columns(len(categories))
+    for i, (cat, info) in enumerate(categories.items()):
+        with cat_cols[i]:
+            st.markdown(
+                f"""
+                <div class="assistant-category">
+                    <div class="assistant-category-title">{cat}</div>
+                    <div class="assistant-category-sub">{info['desc']}</div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+            if st.button("Seç", key=f"assistant_cat_{i}", use_container_width=True):
+                st.session_state.assistant_category = cat
+                st.session_state.assistant_question = info["questions"][0]
+                st.rerun()
 
-    render_question_cards("copilot")
+    selected_cat = st.session_state.assistant_category
+    st.markdown(f'<div class="section-title">{selected_cat} Soruları</div>', unsafe_allow_html=True)
+
+    q_cols = st.columns(2)
+    for i, q in enumerate(categories[selected_cat]["questions"]):
+        with q_cols[i % 2]:
+            if st.button(q, key=f"assistant_q_{selected_cat}_{i}", use_container_width=True):
+                st.session_state.assistant_question = q
+
+    q = st.session_state.assistant_question
+
+    # Data-grounded answer engine
+    title = q
+    main = ""
+    detail = ""
+    source = ""
+
+    if q == "En yüksek gelirli branş hangisi?":
+        row = brans_sum.sort_values("Gelir", ascending=False).iloc[0]
+        main = f"{row['Branş']} · {money_fmt(row['Gelir'])}"
+        detail = f"Bu branş {int_fmt(row['Hasta'])} hasta ile en yüksek toplam geliri üretmiştir. Hasta başı gelir {money_fmt(row['Hasta Başı Gelir'])} seviyesindedir."
+        source = "Kaynak: Brans sayfası · Gelir ve Hasta kolonları"
+
+    elif q == "En kârlı branş hangisi?":
+        row = brans_sum.sort_values("Kar", ascending=False).iloc[0]
+        main = f"{row['Branş']} · {money_fmt(row['Kar'])}"
+        detail = f"Kâr marjı yaklaşık {pct_fmt(row['Kar Marjı %'], 1)}. Gelir toplamı {money_fmt(row['Gelir'])}."
+        source = "Kaynak: Brans sayfası · Kar ve Gelir kolonları"
+
+    elif q == "Hasta başı geliri en yüksek branş hangisi?":
+        row = brans_sum.sort_values("Hasta Başı Gelir", ascending=False).iloc[0]
+        main = f"{row['Branş']} · {money_fmt(row['Hasta Başı Gelir'])}"
+        detail = f"Toplam gelir {money_fmt(row['Gelir'])}, toplam hasta {int_fmt(row['Hasta'])}."
+        source = "Kaynak: Brans sayfası · Gelir / Hasta hesaplaması"
+
+    elif q == "Gelir kanalı dağılımı nasıl?":
+        sgk = float(gunluk["SGK Geliri"].sum())
+        private = float(gunluk["Özel Sigorta Geliri"].sum())
+        cash = float(gunluk["Nakit Gelir"].sum())
+        total = sgk + private + cash
+        main = f"SGK {pct_fmt(sgk/total*100, 1)} · Özel {pct_fmt(private/total*100, 1)} · Nakit {pct_fmt(cash/total*100, 1)}"
+        detail = f"SGK: {money_fmt(sgk)}, Özel Sigorta: {money_fmt(private)}, Nakit: {money_fmt(cash)}."
+        source = "Kaynak: Gunluk sayfası · SGK Geliri, Özel Sigorta Geliri, Nakit Gelir"
+
+    elif q == "En yüksek gelirli doktor kim?":
+        row = dsum.sort_values("Gelir", ascending=False).iloc[0]
+        main = f"{row['Doktor']} · {money_fmt(row['Gelir'])}"
+        detail = f"Branş: {row['Branş']}. Hasta sayısı {int_fmt(row['Hasta'])}, memnuniyet {pct_fmt(row['Memnuniyet'], 1)}."
+        source = "Kaynak: Doktor sayfası · Gelir, Hasta, Memnuniyet"
+
+    elif q == "Memnuniyeti en yüksek doktor kim?":
+        row = dsum.sort_values("Memnuniyet", ascending=False).iloc[0]
+        main = f"{row['Doktor']} · {pct_fmt(row['Memnuniyet'], 1)}"
+        detail = f"Branş: {row['Branş']}. Gelir {money_fmt(row['Gelir'])}, hasta sayısı {int_fmt(row['Hasta'])}."
+        source = "Kaynak: Doktor sayfası · Memnuniyet %"
+
+    elif q == "Hasta başı geliri en yüksek doktor kim?":
+        row = dsum.sort_values("Hasta Başı Gelir", ascending=False).iloc[0]
+        main = f"{row['Doktor']} · {money_fmt(row['Hasta Başı Gelir'])}"
+        detail = f"Branş: {row['Branş']}. Toplam gelir {money_fmt(row['Gelir'])}, hasta {int_fmt(row['Hasta'])}."
+        source = "Kaynak: Doktor sayfası · Gelir / Hasta hesaplaması"
+
+    elif q == "Tetkik geliri en yüksek doktor kim?":
+        row = dsum.sort_values("Tetkik", ascending=False).iloc[0]
+        main = f"{row['Doktor']} · {money_fmt(row['Tetkik'])}"
+        detail = f"Branş: {row['Branş']}. Toplam gelir {money_fmt(row['Gelir'])}."
+        source = "Kaynak: Doktor sayfası · Tetkik Geliri"
+
+    elif q == "En yoğun birim hangisi?":
+        row = latest_ops.sort_values("Kullanılan Kapasite", ascending=False).iloc[0]
+        main = f"{row['Birim']} · {int_fmt(row['Kullanılan Kapasite'])}"
+        detail = f"Günlük kapasite {int_fmt(row['Günlük Kapasite'])}, randevu doluluk {pct_fmt(row['Randevu Doluluk %'], 1)}."
+        source = "Kaynak: Operasyon sayfası · Kullanılan Kapasite"
+
+    elif q == "Bekleme süresi en yüksek birim hangisi?":
+        row = latest_ops.sort_values("Bekleme Dk", ascending=False).iloc[0]
+        main = f"{row['Birim']} · {int(row['Bekleme Dk'])} dk"
+        detail = f"Doluluk oranı {pct_fmt(row['Doluluk %'], 1)}, randevu doluluk {pct_fmt(row['Randevu Doluluk %'], 1)}."
+        source = "Kaynak: Operasyon sayfası · Bekleme Dk"
+
+    elif q == "Doluluk oranı en yüksek birim hangisi?":
+        row = latest_ops.sort_values("Doluluk %", ascending=False).iloc[0]
+        main = f"{row['Birim']} · {pct_fmt(row['Doluluk %'], 1)}"
+        detail = f"Bekleme süresi {int(row['Bekleme Dk'])} dk, kullanılan kapasite {int_fmt(row['Kullanılan Kapasite'])}."
+        source = "Kaynak: Operasyon sayfası · Doluluk %"
+
+    elif q == "Bugünkü operasyonel risk nedir?":
+        main = f"MR {pct_fmt(today['MR Kullanım %'])} · Bekleme {int(today['Ortalama Bekleme Dk'])} dk"
+        detail = f"Bugünkü doluluk {pct_fmt(today['Doluluk %'])}. Bu üç gösterge kapasite baskısını beraber okumak için kullanılır."
+        source = "Kaynak: Gunluk sayfası · MR Kullanım %, Ortalama Bekleme Dk, Doluluk %"
+
+    elif q == "En çok şikayet hangi konuda?":
+        row = kalite.sort_values("Şikayet Sayısı", ascending=False).iloc[0]
+        main = f"{row['Konu']} · {int_fmt(row['Şikayet Sayısı'])} şikayet"
+        detail = f"Ortalama çözüm süresi {row['Ortalama Çözüm Saat']:.1f} saat, etki skoru {int(row['Etki Skoru'])}."
+        source = "Kaynak: Kalite sayfası · Şikayet Sayısı"
+
+    elif q == "Çözüm süresi en yüksek şikayet konusu hangisi?":
+        row = kalite.sort_values("Ortalama Çözüm Saat", ascending=False).iloc[0]
+        main = f"{row['Konu']} · {row['Ortalama Çözüm Saat']:.1f} saat"
+        detail = f"Şikayet sayısı {int_fmt(row['Şikayet Sayısı'])}, öncelik: {row['Öncelik']}."
+        source = "Kaynak: Kalite sayfası · Ortalama Çözüm Saat"
+
+    elif q == "Hasta memnuniyeti bugün kaç?":
+        main = pct_fmt(today["Memnuniyet %"], 1)
+        detail = f"Bugünkü toplam hasta {int_fmt(today['Toplam Hasta'])}, ortalama bekleme {int(today['Ortalama Bekleme Dk'])} dk."
+        source = "Kaynak: Gunluk sayfası · Memnuniyet %"
+
+    elif q == "Etki skoru en yüksek kalite problemi nedir?":
+        row = kalite.sort_values("Etki Skoru", ascending=False).iloc[0]
+        main = f"{row['Konu']} · Etki Skoru {int(row['Etki Skoru'])}"
+        detail = f"Şikayet sayısı {int_fmt(row['Şikayet Sayısı'])}, ortalama çözüm süresi {row['Ortalama Çözüm Saat']:.1f} saat."
+        source = "Kaynak: Kalite sayfası · Etki Skoru"
+
+    elif q == "Kritik stok sayısı kaç?":
+        count = int((stok["Durum"] == "Kritik").sum())
+        main = f"{count} kritik kalem"
+        detail = f"Riskli + kritik toplam kalem sayısı {int_fmt(len(critical_stock))}."
+        source = "Kaynak: Stok sayfası · Durum kolonu"
+
+    elif q == "SKT riski olan kaç kalem var?":
+        count = int((stok["SKT Risk Gün"] <= 60).sum())
+        main = f"{count} kalem"
+        detail = "SKT Risk Gün değeri 60 gün ve altında olan kalemler riskli kabul edilmiştir."
+        source = "Kaynak: Stok sayfası · SKT Risk Gün"
+
+    elif q == "En yüksek stok maliyeti hangi kalemde?":
+        row = stok.sort_values("Stok Değeri", ascending=False).iloc[0]
+        main = f"{row['Malzeme']} · {money_fmt(row['Stok Değeri'])}"
+        detail = f"Kategori: {row['Kategori']}. Mevcut stok {int_fmt(row['Mevcut Stok'])}, durum: {row['Durum']}."
+        source = "Kaynak: Stok sayfası · Stok Değeri"
+
+    elif q == "Önerilen sipariş toplamı ne kadar?":
+        total_order = float(stok["Önerilen Sipariş Değeri"].sum())
+        main = money_fmt(total_order)
+        detail = f"Kritik/riskli kalem sayısı {int_fmt(len(critical_stock))}. Sipariş önerisi demo hesaplamadır."
+        source = "Kaynak: Stok sayfası · Önerilen Sipariş Değeri"
+
+    st.markdown(
+        f"""
+        <div class="assistant-answer">
+            <div class="assistant-answer-title">{title}</div>
+            <div class="assistant-answer-main">{main}</div>
+            <div class="assistant-answer-text">{detail}</div>
+            <div class="assistant-source">{source}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    target_map = {
+        "📊 Finans": "Finans Merkezi",
+        "👨‍⚕️ Doktorlar": "Doktor Intelligence",
+        "🏥 Operasyon": "Operasyon",
+        "🙂 Hasta Deneyimi": "Kalite & Hasta Deneyimi",
+        "📦 Stok": "Stok & Satın Alma",
+    }
+
+    if st.button(f"İlgili Modüle Git → {target_map[selected_cat]}", key="assistant_go_target", use_container_width=True):
+        goto(target_map[selected_cat])
 
 
 # =========================================================
