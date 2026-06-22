@@ -18,10 +18,7 @@ import plotly.express as px
 import streamlit as st
 
 
-APP_VERSION = "V0.1 Hospital Concept"
-DEFAULT_DATA_FILE = "AYCA_Hospital_Sample_Data.xlsx"
-
-
+APP_VERSION = "V0.3 Hospital Concept"
 # -----------------------------
 # Page Config
 # -----------------------------
@@ -248,9 +245,9 @@ def briefing_item(icon: str, title: str, text: str):
 
 
 @st.cache_data(show_spinner=False)
-def load_data(uploaded_file=None):
-    source = uploaded_file if uploaded_file is not None else DEFAULT_DATA_FILE
-    xls = pd.ExcelFile(source)
+def load_data(uploaded_file):
+    """Read AYÇA Hospital Excel template uploaded by the user."""
+    xls = pd.ExcelFile(uploaded_file)
     data = {sheet: pd.read_excel(xls, sheet_name=sheet) for sheet in xls.sheet_names}
 
     for key in ["Gunluk", "Brans", "Doktor", "Operasyon"]:
@@ -275,10 +272,19 @@ def latest_date(df: pd.DataFrame):
 # -----------------------------
 with st.sidebar:
     st.markdown("## 🏥 AYÇA Insight Hospital")
-    st.caption("Hastane Yönetim ve Karar Destek Konsept Demo")
+    st.caption("Hastane Yönetim ve Karar Destek Konsept Demo · V0.3")
     st.divider()
 
-    uploaded = st.file_uploader("Sample Excel yükle", type=["xlsx"])
+    uploaded = st.file_uploader(
+        "Hastane Veri Dosyası",
+        type=["xlsx"],
+        help="AYÇA Hospital veri şablonunu yükleyiniz."
+    )
+
+    if uploaded is None:
+        st.info("Devam etmek için AYÇA Hospital Excel veri dosyasını yükleyiniz.")
+        st.caption("Demo için sample Excel dosyasını yükleyebilirsiniz. Veri dosyası koda gömülü değildir.")
+        st.stop()
 
     st.markdown("### Modüller")
     module = st.radio(
@@ -303,10 +309,17 @@ with st.sidebar:
 try:
     data = load_data(uploaded)
 except Exception as e:
-    st.error("Veri dosyası okunamadı. Lütfen AYCA_Hospital_Sample_Data.xlsx dosyasını app.py ile aynı klasöre koyun.")
+    st.error("Excel dosyası okunamadı. Lütfen AYÇA Hospital veri şablonunu kontrol ediniz.")
     st.exception(e)
     st.stop()
 
+
+required_sheets = ["Gunluk", "Brans", "Doktor", "Hasta", "Operasyon", "Stok", "Kalite"]
+missing_sheets = [s for s in required_sheets if s not in data]
+
+if missing_sheets:
+    st.error("Excel şablonunda eksik sayfa var: " + ", ".join(missing_sheets))
+    st.stop()
 
 gunluk = safe_sheet(data, "Gunluk")
 brans = safe_sheet(data, "Brans")
@@ -334,9 +347,26 @@ st.markdown(
     <div class="ayca-topbar">
         <div class="ayca-title">AYÇA Insight Hospital</div>
         <div class="ayca-subtitle">
-            Hastane Yönetim ve Karar Destek Platformu · HG Hospital Konsept Demo · Son güncelleme: {max_date.strftime('%d.%m.%Y')}
+            Executive Intelligence · Hospital CEO Dashboard · HG Hospital Konsept Demo · Son güncelleme: {max_date.strftime('%d.%m.%Y')}
         </div>
         <div class="version-pill">{APP_VERSION}</div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+st.markdown(
+    """
+    <div class="ai-box">
+    <strong>V0.3 Konsept:</strong>
+    Bu ekran hastane direktörü, genel müdür ve yönetim ekibinin sabah tek bakışta hastanenin finansal,
+    operasyonel ve kalite durumunu görmesi için tasarlanmıştır.
+    <br><br>
+    <span class="module-chip">CEO Dashboard</span>
+    <span class="module-chip">Finans Merkezi</span>
+    <span class="module-chip">Doktor Intelligence</span>
+    <span class="module-chip">Operasyon Riski</span>
+    <span class="module-chip">AYÇA Co-Pilot</span>
     </div>
     """,
     unsafe_allow_html=True,
