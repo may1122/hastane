@@ -20,13 +20,14 @@ import plotly.express as px
 import streamlit as st
 
 
-APP_VERSION = "V0.5 Hospital Concept"
+APP_VERSION = "V0.6 SaaS Hospital Concept"
 
 NAV_ITEMS = [
     "CEO Dashboard",
     "Finans Merkezi",
     "Doktor Intelligence",
     "Operasyon",
+    "Yönetim Toplantısı",
     "Kalite & Hasta Deneyimi",
     "Hasta Analitiği",
     "Stok & Satın Alma",
@@ -66,38 +67,61 @@ st.markdown(
     }
 
     section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #061627 0%, #03111f 100%);
-        border-right: 1px solid rgba(148, 163, 184, .18);
+        background: #ffffff;
+        border-right: 1px solid #e2e8f0;
+        box-shadow: 8px 0 24px rgba(15,23,42,.035);
     }
 
     section[data-testid="stSidebar"] * {
-        color: #e5eefb;
+        color: #0f172a;
     }
 
     .ayca-logo {
-        font-size: 34px;
-        font-weight: 900;
+        font-size: 29px;
+        font-weight: 950;
         letter-spacing: -1.1px;
-        color: #f8fafc;
+        color: #0f172a;
         line-height: 1.05;
     }
 
     .ayca-sub {
-        font-size: 11px;
-        color: #93c5fd;
-        letter-spacing: 1px;
-        margin-bottom: 8px;
+        font-size: 12px;
+        color: #64748b;
+        letter-spacing: .3px;
+        margin-bottom: 10px;
+        font-weight: 750;
     }
 
     .version-badge {
         display: inline-block;
-        background: linear-gradient(135deg, #22c55e 0%, #14b8a6 100%);
-        color: #052e16;
+        background: #eff6ff;
+        color: #1d4ed8;
+        border: 1px solid #bfdbfe;
         font-weight: 850;
         font-size: 11px;
         padding: 6px 12px;
         border-radius: 999px;
         margin-bottom: 18px;
+    }
+
+    .sidebar-org {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 12px 14px;
+        margin: 8px 0 16px;
+    }
+
+    .sidebar-org-title {
+        color: #0f172a;
+        font-weight: 900;
+        font-size: 14px;
+    }
+
+    .sidebar-org-sub {
+        color: #64748b;
+        font-size: 12px;
+        margin-top: 3px;
     }
 
     .top-strip {
@@ -397,10 +421,167 @@ st.markdown(
     }
 
     section[data-testid="stSidebar"] .stButton > button {
-        background: rgba(15, 31, 53, .92);
-        border: 1px solid rgba(148, 163, 184, .22);
-        color: #e5eefb;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        color: #334155;
+        text-align: left;
+        justify-content: flex-start;
+        box-shadow: 0 4px 12px rgba(15,23,42,.025);
     }
+
+    section[data-testid="stSidebar"] .stButton > button:hover {
+        background: #eff6ff;
+        border-color: #bfdbfe;
+        color: #1d4ed8;
+    }
+
+    .brief-hero {
+        background: linear-gradient(135deg, #0f172a, #1e3a8a);
+        color: white;
+        border-radius: 20px;
+        padding: 22px 24px;
+        box-shadow: 0 18px 36px rgba(15,23,42,.12);
+        margin-bottom: 16px;
+    }
+
+    .brief-hero-title {
+        font-size: 28px;
+        font-weight: 950;
+        letter-spacing: -.8px;
+        margin-bottom: 6px;
+    }
+
+    .brief-hero-sub {
+        color: #dbeafe;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .score-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        padding: 18px;
+        box-shadow: 0 8px 22px rgba(15,23,42,.045);
+    }
+
+    .score-big {
+        font-size: 44px;
+        font-weight: 950;
+        color: #2563eb;
+        line-height: 1;
+    }
+
+    .progress-row {
+        margin: 10px 0;
+    }
+
+    .progress-label {
+        display:flex;
+        justify-content:space-between;
+        color:#334155;
+        font-size:12px;
+        font-weight:800;
+        margin-bottom:5px;
+    }
+
+    .progress-track {
+        height: 8px;
+        background: #e2e8f0;
+        border-radius: 999px;
+        overflow:hidden;
+    }
+
+    .progress-fill {
+        height: 8px;
+        background: linear-gradient(90deg, #2563eb, #22c55e);
+        border-radius: 999px;
+    }
+
+    .meeting-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        padding: 18px;
+        box-shadow: 0 8px 22px rgba(15,23,42,.045);
+        min-height: 150px;
+    }
+
+    .meeting-label {
+        color:#64748b;
+        font-size:12px;
+        font-weight:800;
+        margin-bottom:8px;
+    }
+
+    .meeting-value {
+        color:#0f172a;
+        font-size:26px;
+        font-weight:950;
+        margin-bottom:8px;
+    }
+
+    .action-card {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-left: 5px solid #2563eb;
+        border-radius: 16px;
+        padding: 14px 16px;
+        margin-bottom: 10px;
+    }
+
+    .action-title {
+        color:#0f172a;
+        font-weight:950;
+        margin-bottom:4px;
+    }
+
+    .action-text {
+        color:#475569;
+        font-size:13px;
+        line-height:1.45;
+    }
+
+    .doctor-rank {
+        background:white;
+        border:1px solid #e2e8f0;
+        border-radius:16px;
+        padding:15px;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        margin-bottom:10px;
+        box-shadow: 0 8px 18px rgba(15,23,42,.035);
+    }
+
+    .rank-left {
+        display:flex;
+        gap:13px;
+        align-items:center;
+    }
+
+    .rank-no {
+        width:34px;
+        height:34px;
+        border-radius:999px;
+        background:#eff6ff;
+        color:#1d4ed8;
+        display:grid;
+        place-items:center;
+        font-weight:950;
+    }
+
+    .heatmap-cell {
+        text-align:center;
+        padding:10px 6px;
+        border-radius:12px;
+        font-weight:900;
+        font-size:13px;
+    }
+
+    .heat-low { background:#dcfce7; color:#166534; }
+    .heat-mid { background:#fef3c7; color:#92400e; }
+    .heat-high { background:#ffe4e6; color:#be123c; }
 </style>
 """,
     unsafe_allow_html=True,
@@ -517,13 +698,29 @@ def safe_sheet(data, name):
 # Sidebar
 # =========================================================
 with st.sidebar:
-    st.markdown('<div class="ayca-logo">✣ AYÇA</div>', unsafe_allow_html=True)
-    st.markdown('<div class="ayca-sub">INSIGHT HOSPITAL</div>', unsafe_allow_html=True)
+    st.markdown('<div class="ayca-logo">✣ AYÇA Insight</div>', unsafe_allow_html=True)
+    st.markdown('<div class="ayca-sub">Hospital Analytics</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="version-badge">{APP_VERSION}</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="sidebar-org"><div class="sidebar-org-title">HG Hospital</div><div class="sidebar-org-sub">Premium Plan · Yönetici Paneli</div></div>',
+        unsafe_allow_html=True,
+    )
 
     st.markdown("### Menü")
+    menu_icons = {
+        "CEO Dashboard": "🏠",
+        "Finans Merkezi": "💰",
+        "Doktor Intelligence": "👨‍⚕️",
+        "Operasyon": "🏥",
+        "Yönetim Toplantısı": "🎯",
+        "Kalite & Hasta Deneyimi": "🙂",
+        "Hasta Analitiği": "👥",
+        "Stok & Satın Alma": "📦",
+        "AYÇA Co-Pilot": "🤖",
+    }
     for item in NAV_ITEMS:
-        label = "● " + item if st.session_state.active_page == item else item
+        prefix = "●" if st.session_state.active_page == item else menu_icons.get(item, "•")
+        label = f"{prefix} {item}"
         if st.button(label, key=f"side_{item}", use_container_width=True):
             goto(item)
 
@@ -627,7 +824,7 @@ st.markdown(
     """
     <div class="concept-box">
         <div class="concept-title">
-            <strong>V0.5 Konsept:</strong> Bu ekran hastane direktörü, genel müdür ve yönetim ekibinin sabah tek bakışta
+            <strong>V0.6 Konsept:</strong> Bu ekran hastane direktörü, genel müdür ve yönetim ekibinin sabah tek bakışta
             hastanenin finansal, operasyonel ve kalite durumunu görmesi için tasarlanmıştır.
         </div>
     </div>
@@ -636,7 +833,7 @@ st.markdown(
 )
 
 quick_cols = st.columns(5)
-quick_pages = ["CEO Dashboard", "Finans Merkezi", "Doktor Intelligence", "Operasyon", "AYÇA Co-Pilot"]
+quick_pages = ["CEO Dashboard", "Finans Merkezi", "Doktor Intelligence", "Yönetim Toplantısı", "AYÇA Co-Pilot"]
 for i, page in enumerate(quick_pages):
     with quick_cols[i]:
         if st.button(page, key=f"quick_{page}", use_container_width=True):
@@ -693,6 +890,44 @@ def render_question_cards(context="main"):
 # =========================================================
 def render_ceo_dashboard():
     section_header("CEO Dashboard", "Yönetici Özeti")
+
+    st.markdown(
+        f"""
+        <div class="brief-hero">
+            <div class="brief-hero-title">Günaydın Ahmet Bey</div>
+            <div class="brief-hero-sub">
+                Bugün dikkat edilmesi gereken 4 konu var: MR kapasitesi {pct_fmt(today['MR Kullanım %'])}, ortalama bekleme {int(today['Ortalama Bekleme Dk'])} dk,
+                günlük gelir hedefi {pct_fmt(today['Hedef Gerçekleşme %'])} ve hasta memnuniyeti {pct_fmt(today['Memnuniyet %'])}.
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    score_left, score_right = st.columns([1, 2])
+    with score_left:
+        st.markdown(
+            f"""
+            <div class="score-card">
+                <div class="metric-label">HG Hospital Sağlık Skoru</div>
+                <div class="score-big">{int(today['Risk Skoru'])}/100</div>
+                <div class="metric-note">Finans, operasyon, kalite ve hasta deneyimi birleşik skoru</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with score_right:
+        st.markdown(
+            f"""
+            <div class="score-card">
+                <div class="progress-row"><div class="progress-label"><span>Finans</span><span>90</span></div><div class="progress-track"><div class="progress-fill" style="width:90%;"></div></div></div>
+                <div class="progress-row"><div class="progress-label"><span>Operasyon</span><span>76</span></div><div class="progress-track"><div class="progress-fill" style="width:76%;"></div></div></div>
+                <div class="progress-row"><div class="progress-label"><span>Kalite</span><span>82</span></div><div class="progress-track"><div class="progress-fill" style="width:82%;"></div></div></div>
+                <div class="progress-row"><div class="progress-label"><span>Memnuniyet</span><span>{int(today['Memnuniyet %'])}</span></div><div class="progress-track"><div class="progress-fill" style="width:{int(today['Memnuniyet %'])}%;"></div></div></div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
     cols = st.columns(6)
     with cols[0]: metric_card("💰", "i-green", "Günlük Ciro", money_fmt(today["Günlük Ciro"]), "↑ %12,4", "Önceki 30 güne göre")
@@ -791,6 +1026,61 @@ def render_ceo_dashboard():
     render_question_cards("ceo")
 
 
+
+def render_management_meeting():
+    section_header("Yönetim Toplantısı", "Haftalık yönetici özeti ve aksiyon listesi")
+
+    brans_sum = brans.groupby("Branş", as_index=False).agg(Gelir=("Gelir", "sum"), Kar=("Kar", "sum"), Hasta=("Hasta", "sum"))
+    top_rev = brans_sum.sort_values("Gelir", ascending=False).iloc[0]
+    top_profit = brans_sum.sort_values("Kar", ascending=False).iloc[0]
+    top_complaint = kalite.sort_values("Şikayet Sayısı", ascending=False).iloc[0]
+
+    c1, c2, c3, c4 = st.columns(4)
+    with c1:
+        st.markdown(f'<div class="meeting-card"><div class="meeting-label">Gelir Trend</div><div class="meeting-value">+%8,7</div><div class="metric-note">Son 30 gün</div></div>', unsafe_allow_html=True)
+    with c2:
+        st.markdown(f'<div class="meeting-card"><div class="meeting-label">Hasta Trend</div><div class="meeting-value">+%6,1</div><div class="metric-note">{int_fmt(total_patient)} toplam hasta</div></div>', unsafe_allow_html=True)
+    with c3:
+        st.markdown(f'<div class="meeting-card"><div class="meeting-label">En İyi Branş</div><div class="meeting-value">{top_rev["Branş"]}</div><div class="metric-note">{money_fmt(top_rev["Gelir"])} gelir</div></div>', unsafe_allow_html=True)
+    with c4:
+        st.markdown(f'<div class="meeting-card"><div class="meeting-label">En Riskli Konu</div><div class="meeting-value">{top_complaint["Konu"]}</div><div class="metric-note">{int_fmt(top_complaint["Şikayet Sayısı"])} şikayet</div></div>', unsafe_allow_html=True)
+
+    left, right = st.columns([1, 1])
+    with left:
+        st.markdown('<div class="section-title">Toplantı Gündemi</div>', unsafe_allow_html=True)
+        actions = [
+            ("Radyoloji kapasitesi", f"MR kullanım oranı {pct_fmt(today['MR Kullanım %'])}. Ek slot veya mesai planı değerlendirilmeli."),
+            ("Bekleme süresi", f"Ortalama bekleme {int(today['Ortalama Bekleme Dk'])} dk. Kardiyoloji ve acil servis öncelikli incelenmeli."),
+            ("Finans fırsatı", f"{top_profit['Branş']} kârlılıkta öne çıkıyor. Bu branşta kapasite artırımı değerlendirilebilir."),
+            ("Hasta deneyimi", f"En büyük şikayet konusu {top_complaint['Konu']}. Çözüm süresi ve kök neden çalışması önerilir."),
+        ]
+        for title, text in actions:
+            st.markdown(f'<div class="action-card"><div class="action-title">{title}</div><div class="action-text">{text}</div></div>', unsafe_allow_html=True)
+
+    with right:
+        st.markdown('<div class="section-title">Yönetim Kurulu Raporu</div>', unsafe_allow_html=True)
+        st.info("Bu konseptte rapor içeriği dashboard verilerinden otomatik oluşturulacak şekilde tasarlanmıştır.")
+        report_text = f"""
+HG Hospital Haftalık Yönetici Özeti
+
+- Toplam gelir: {money_fmt(total_revenue)}
+- Toplam hasta: {int_fmt(total_patient)}
+- En yüksek gelir üreten branş: {top_rev['Branş']}
+- En kârlı branş: {top_profit['Branş']}
+- En kritik operasyonel risk: MR kapasitesi {pct_fmt(today['MR Kullanım %'])}
+- Ana hasta deneyimi problemi: {top_complaint['Konu']}
+"""
+        st.download_button(
+            "📄 Yönetim Kurulu Raporu İndir",
+            data=report_text,
+            file_name="ayca_hospital_yonetici_ozeti.txt",
+            mime="text/plain",
+            use_container_width=True,
+        )
+
+    render_question_cards("meeting")
+
+
 def render_finance():
     section_header("Finans Merkezi", "Branş, kanal ve kârlılık analizi")
 
@@ -837,6 +1127,25 @@ def render_doctors():
     with cols[2]: metric_card("🧪", "i-purple", "Tetkik Geliri", money_fmt(dsum["Tetkik"].sum()), "Toplam", "Son 30 gün")
     with cols[3]: metric_card("🔁", "i-orange", "Tekrar Başvuru", pct_fmt(dsum["Tekrar"].mean()), "Ortalama", "Son 30 gün")
 
+    st.markdown('<div class="section-title">Doktor Performans Ligi</div>', unsafe_allow_html=True)
+    rank_df = dsum.sort_values(["Gelir", "Memnuniyet"], ascending=False).head(5).reset_index(drop=True)
+    for idx, row in rank_df.iterrows():
+        st.markdown(
+            f"""
+            <div class="doctor-rank">
+                <div class="rank-left">
+                    <div class="rank-no">{idx+1}</div>
+                    <div>
+                        <div class="q-title">{row['Doktor']}</div>
+                        <div class="metric-note">{row['Branş']} · Gelir: {money_fmt(row['Gelir'])} · Memnuniyet: {pct_fmt(row['Memnuniyet'])}</div>
+                    </div>
+                </div>
+                <div class="trend-up">★★★★★</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
     c1, c2 = st.columns(2)
     with c1:
         fig = px.scatter(dsum, x="Hasta", y="Gelir", size="Memnuniyet", color="Branş", hover_name="Doktor", title="Doktor Gelir / Hasta Matrisi")
@@ -870,6 +1179,27 @@ def render_operations():
         fig = px.bar(latest_ops.sort_values("Doluluk %"), x="Doluluk %", y="Birim", orientation="h", title="Birim Bazlı Doluluk")
         fig.update_traces(marker_color="#2563eb")
         st.plotly_chart(chart_layout_light(fig, 420), use_container_width=True)
+
+    st.markdown('<div class="section-title">Operasyon Isı Haritası</div>', unsafe_allow_html=True)
+    heat_cols = st.columns(6)
+    days = ["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"]
+    slots = ["08-10", "10-12", "12-14", "14-16"]
+    heat_values = [
+        ["🟢", "🟡", "🟡", "🔴", "🔴", "🟡"],
+        ["🟡", "🟡", "🔴", "🔴", "🔴", "🔴"],
+        ["🟢", "🟢", "🟡", "🟡", "🔴", "🟡"],
+        ["🟢", "🟡", "🟡", "🔴", "🟡", "🟢"],
+    ]
+    st.write("Yoğunluk: 🟢 düşük · 🟡 orta · 🔴 yüksek")
+    for row_i, slot in enumerate(slots):
+        cols_h = st.columns(7)
+        with cols_h[0]:
+            st.markdown(f"**{slot}**")
+        for col_i, day in enumerate(days):
+            emoji = heat_values[row_i][col_i]
+            cls = "heat-low" if emoji == "🟢" else ("heat-mid" if emoji == "🟡" else "heat-high")
+            with cols_h[col_i + 1]:
+                st.markdown(f'<div class="heatmap-cell {cls}">{day}<br>{emoji}</div>', unsafe_allow_html=True)
 
     st.dataframe(latest_ops, use_container_width=True, hide_index=True)
     render_question_cards("ops")
@@ -960,9 +1290,19 @@ def render_copilot():
         "Hangi alanlarda risk var?": f"MR kullanım oranı {pct_fmt(today['MR Kullanım %'])}, doluluk {pct_fmt(today['Doluluk %'])}. Kapasite ve bekleme riski birlikte takip edilmelidir.",
     }
 
-    selected = st.selectbox("Örnek soru seç", list(qa.keys()))
-    st.markdown(f"### Yanıt")
-    st.info(qa[selected])
+    if "copilot_question" not in st.session_state:
+        st.session_state.copilot_question = list(qa.keys())[0]
+
+    st.markdown('<div class="section-title">Hazır Yönetici Soruları</div>', unsafe_allow_html=True)
+    qcols = st.columns(3)
+    for i, q in enumerate(qa.keys()):
+        with qcols[i % 3]:
+            if st.button(q, key=f"copilot_q_{i}", use_container_width=True):
+                st.session_state.copilot_question = q
+
+    selected = st.session_state.copilot_question
+    st.markdown("### AYÇA Yanıtı")
+    st.success(qa[selected])
 
     render_question_cards("copilot")
 
@@ -980,6 +1320,8 @@ elif page == "Doktor Intelligence":
     render_doctors()
 elif page == "Operasyon":
     render_operations()
+elif page == "Yönetim Toplantısı":
+    render_management_meeting()
 elif page == "Kalite & Hasta Deneyimi":
     render_quality()
 elif page == "Hasta Analitiği":
