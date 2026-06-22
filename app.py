@@ -1,7 +1,7 @@
 
 # -*- coding: utf-8 -*-
 """
-AYÇA Insight Hospital V0.4
+AYÇA Insight Hospital V0.4.2
 Dark Executive Hospital Dashboard Concept
 
 Run:
@@ -21,7 +21,7 @@ import plotly.express as px
 import streamlit as st
 
 
-APP_VERSION = "V0.4 Hospital Concept"
+APP_VERSION = "V0.4.2 Hospital Concept"
 
 
 # =========================================================
@@ -394,6 +394,104 @@ st.markdown(
     div[data-testid="stMetricDelta"] {
         color: #4ade80 !important;
     }
+
+    .trend-panel {
+        background: linear-gradient(180deg, rgba(15, 31, 53, .95), rgba(8, 23, 39, .95));
+        border: 1px solid rgba(148, 163, 184, .22);
+        border-radius: 16px;
+        padding: 18px 18px 12px 18px;
+        box-shadow: 0 18px 45px rgba(0,0,0,.18);
+        min-height: 575px;
+    }
+
+    .trend-panel-title {
+        color: #f8fafc;
+        font-size: 18px;
+        font-weight: 900;
+        margin-bottom: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .trend-info {
+        color: #94a3b8;
+        border: 1px solid rgba(148, 163, 184, .35);
+        width: 22px;
+        height: 22px;
+        border-radius: 999px;
+        display: inline-grid;
+        place-items: center;
+        font-size: 13px;
+    }
+
+    .trend-stat-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .trend-stat-row.two {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .trend-stat {
+        background: rgba(15, 23, 42, .42);
+        border: 1px solid rgba(148, 163, 184, .16);
+        border-radius: 14px;
+        padding: 14px;
+        min-height: 92px;
+    }
+
+    .trend-stat-label {
+        color: #cbd5e1;
+        font-size: 12px;
+        font-weight: 750;
+        margin-bottom: 6px;
+    }
+
+    .trend-stat-value {
+        color: #f8fafc;
+        font-size: 22px;
+        font-weight: 950;
+        letter-spacing: -.4px;
+    }
+
+    .trend-stat-sub {
+        color: #94a3b8;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    .trend-up { color: #4ade80; font-weight: 900; }
+    .trend-red { color: #fb7185; font-weight: 900; }
+    .trend-green { color: #22c55e; font-weight: 900; }
+    .trend-blue { color: #60a5fa; font-weight: 900; }
+
+    .trend-bottom-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 0;
+        background: linear-gradient(180deg, rgba(15,31,53,.95), rgba(8,23,39,.95));
+        border: 1px solid rgba(148,163,184,.20);
+        border-radius: 16px;
+        margin-top: 16px;
+        overflow: hidden;
+    }
+
+    .trend-bottom-item {
+        padding: 20px 22px;
+        border-right: 1px solid rgba(148,163,184,.16);
+        min-height: 105px;
+        display: flex;
+        gap: 14px;
+        align-items: center;
+    }
+
+    .trend-bottom-item:last-child { border-right: none; }
+
+
 </style>
 """,
     unsafe_allow_html=True,
@@ -429,6 +527,24 @@ def pct_fmt(x, digits=0) -> str:
         return "%0"
 
 
+def date_short_tr(d) -> str:
+    aylar = {
+        1: "Oca", 2: "Şub", 3: "Mar", 4: "Nis", 5: "May", 6: "Haz",
+        7: "Tem", 8: "Ağu", 9: "Eyl", 10: "Eki", 11: "Kas", 12: "Ara"
+    }
+    d = pd.to_datetime(d)
+    return f"{d.day} {aylar.get(d.month, '')}"
+
+
+def date_long_tr(d) -> str:
+    aylar = {
+        1: "Ocak", 2: "Şubat", 3: "Mart", 4: "Nisan", 5: "Mayıs", 6: "Haziran",
+        7: "Temmuz", 8: "Ağustos", 9: "Eylül", 10: "Ekim", 11: "Kasım", 12: "Aralık"
+    }
+    d = pd.to_datetime(d)
+    return f"{d.day} {aylar.get(d.month, '')} {d.year}"
+
+
 def metric_card(icon, icon_class, label, value, delta, note):
     st.markdown(
         f"""
@@ -452,8 +568,32 @@ def chart_layout(fig, height=390):
         font=dict(color="#cbd5e1"),
         margin=dict(l=15, r=15, t=45, b=25),
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5),
-        xaxis=dict(gridcolor="rgba(148,163,184,.13)", zeroline=False),
+        xaxis=dict(gridcolor="rgba(148,163,184,.13)", zeroline=False, tickformat="%d %b", type="date"),
         yaxis=dict(gridcolor="rgba(148,163,184,.13)", zeroline=False),
+    )
+    return fig
+
+
+def chart_layout_trend(fig, height=360):
+    fig.update_layout(
+        height=height,
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font=dict(color="#cbd5e1", size=12),
+        margin=dict(l=8, r=8, t=18, b=35),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5),
+        xaxis=dict(
+            gridcolor="rgba(148,163,184,.10)",
+            zeroline=False,
+            tickformat="%d %b",
+            type="date",
+            showspikes=False,
+        ),
+        yaxis=dict(
+            gridcolor="rgba(148,163,184,.18)",
+            zeroline=False,
+        ),
+        hovermode="x unified",
     )
     return fig
 
@@ -464,6 +604,24 @@ def section_header(title, subtitle=None):
         st.markdown(f'<div class="page-subtitle">{subtitle}</div>', unsafe_allow_html=True)
 
 
+def parse_excel_dates(series: pd.Series) -> pd.Series:
+    """
+    Excel tarihleri bazen 2026-05-24 yerine 46166 gibi seri numarası olarak gelir.
+    Normal pd.to_datetime bu sayıları 1970 epoch çevresine düşürür.
+    Bu fonksiyon hem gerçek tarihleri hem Excel seri tarihlerini güvenli çevirir.
+    """
+    if pd.api.types.is_numeric_dtype(series):
+        return pd.to_datetime(series, unit="D", origin="1899-12-30", errors="coerce")
+
+    numeric = pd.to_numeric(series, errors="coerce")
+    numeric_ratio = numeric.notna().mean()
+
+    if numeric_ratio > 0.70 and numeric.dropna().between(30000, 60000).mean() > 0.70:
+        return pd.to_datetime(numeric, unit="D", origin="1899-12-30", errors="coerce")
+
+    return pd.to_datetime(series, errors="coerce", dayfirst=True)
+
+
 @st.cache_data(show_spinner=False)
 def load_data(uploaded_file):
     xls = pd.ExcelFile(uploaded_file)
@@ -471,7 +629,7 @@ def load_data(uploaded_file):
 
     for key in ["Gunluk", "Brans", "Doktor", "Operasyon"]:
         if key in data and "Tarih" in data[key].columns:
-            data[key]["Tarih"] = pd.to_datetime(data[key]["Tarih"])
+            data[key]["Tarih"] = parse_excel_dates(data[key]["Tarih"])
 
     return data
 
@@ -499,7 +657,20 @@ with st.sidebar:
         "AYÇA Co-Pilot",
     ]
 
-    module = st.radio("Menü", nav_items, label_visibility="collapsed")
+    if "active_module" not in st.session_state:
+        st.session_state["active_module"] = "CEO Dashboard"
+
+    if st.session_state["active_module"] not in nav_items:
+        st.session_state["active_module"] = "CEO Dashboard"
+
+    module = st.radio(
+        "Menü",
+        nav_items,
+        index=nav_items.index(st.session_state["active_module"]),
+        label_visibility="collapsed",
+        key="sidebar_module",
+    )
+    st.session_state["active_module"] = module
 
     st.divider()
     st.caption("Veri Dosyası")
@@ -547,10 +718,15 @@ if gunluk.empty or "Tarih" not in gunluk.columns:
     st.error("Gunluk sayfasında Tarih kolonu bulunmalı.")
     st.stop()
 
+gunluk = gunluk.dropna(subset=["Tarih"]).sort_values("Tarih").copy()
+brans = brans.dropna(subset=["Tarih"]).sort_values("Tarih").copy() if "Tarih" in brans.columns else brans
+doktor = doktor.dropna(subset=["Tarih"]).sort_values("Tarih").copy() if "Tarih" in doktor.columns else doktor
+operasyon = operasyon.dropna(subset=["Tarih"]).sort_values("Tarih").copy() if "Tarih" in operasyon.columns else operasyon
+
 max_date = pd.to_datetime(gunluk["Tarih"]).max()
 today_df = gunluk[gunluk["Tarih"] == max_date]
 today = today_df.iloc[0] if not today_df.empty else gunluk.iloc[-1]
-last_30 = gunluk.copy()
+last_30 = gunluk.tail(30).copy()
 
 # Derived metrics
 total_revenue = float(gunluk["Günlük Ciro"].sum())
@@ -600,7 +776,7 @@ st.markdown(
     """
     <div class="concept-box">
         <div class="concept-title">
-            <strong>V0.4 Konsept:</strong> Bu ekran hastane direktörü, genel müdür ve yönetim ekibinin sabah tek bakışta
+            <strong>V0.4.2 Konsept:</strong> Bu ekran hastane direktörü, genel müdür ve yönetim ekibinin sabah tek bakışta
             hastanenin finansal, operasyonel ve kalite durumunu görmesi için tasarlanmıştır.
         </div>
         <div class="chip-row">
@@ -614,6 +790,14 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
+nav_cols = st.columns(5)
+quick_targets = ["CEO Dashboard", "Finans Merkezi", "Doktor Intelligence", "Operasyon", "AYÇA Co-Pilot"]
+for i, target in enumerate(quick_targets):
+    with nav_cols[i]:
+        if st.button(target, key=f"top_nav_{target}"):
+            st.session_state["active_module"] = target
+            st.rerun()
 
 
 # =========================================================
@@ -632,47 +816,150 @@ def render_ceo_dashboard():
 
     st.markdown('<div class="section-title">Son 30 Gün Trend</div>', unsafe_allow_html=True)
 
+    avg_daily_revenue = float(last_30["Günlük Ciro"].mean())
+    max_revenue_row = last_30.loc[last_30["Günlük Ciro"].idxmax()]
+    min_revenue_row = last_30.loc[last_30["Günlük Ciro"].idxmin()]
+    avg_total_patient = float(last_30["Toplam Hasta"].mean())
+    avg_emergency_patient = float(last_30["Acil Hasta"].mean())
+
     c1, c2 = st.columns(2)
 
     with c1:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
+        st.markdown(
+            f"""
+            <div class="trend-panel">
+                <div class="trend-panel-title">
+                    <span>Günlük Ciro Trendi</span>
+                    <span class="trend-info">i</span>
+                </div>
+                <div class="trend-stat-row">
+                    <div class="trend-stat">
+                        <div class="trend-stat-label">Ort. Günlük Ciro</div>
+                        <div class="trend-stat-value">{money_fmt(avg_daily_revenue)}</div>
+                        <div class="trend-stat-sub"><span class="trend-up">↑ %12,4</span> · Önceki 30 güne göre</div>
+                    </div>
+                    <div class="trend-stat">
+                        <div class="trend-stat-label">En Yüksek Gün</div>
+                        <div class="trend-stat-value">{money_fmt(max_revenue_row["Günlük Ciro"])}</div>
+                        <div class="trend-stat-sub"><span class="trend-green">{date_long_tr(max_revenue_row["Tarih"])}</span></div>
+                    </div>
+                    <div class="trend-stat">
+                        <div class="trend-stat-label">En Düşük Gün</div>
+                        <div class="trend-stat-value">{money_fmt(min_revenue_row["Günlük Ciro"])}</div>
+                        <div class="trend-stat-sub"><span class="trend-red">{date_long_tr(min_revenue_row["Tarih"])}</span></div>
+                    </div>
+                </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
         fig = go.Figure()
         fig.add_trace(
             go.Scatter(
                 x=last_30["Tarih"],
                 y=last_30["Günlük Ciro"],
                 mode="lines+markers",
-                name="Günlük Ciro",
+                name="Günlük Ciro (TL)",
                 line=dict(width=3, color="#3b82f6"),
                 marker=dict(size=6, color="#bfdbfe", line=dict(width=2, color="#2563eb")),
                 fill="tozeroy",
-                fillcolor="rgba(59,130,246,.13)",
+                fillcolor="rgba(59,130,246,.16)",
             )
         )
-        fig.update_yaxes(tickprefix="", ticksuffix="", tickformat="~s", title="")
-        fig.update_xaxes(title="")
-        fig.update_layout(title="Günlük Ciro Trendi (TL)", showlegend=False)
-        st.plotly_chart(chart_layout(fig, 390), use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        fig.update_yaxes(tickformat="~s", ticksuffix=" TL", rangemode="tozero")
+        st.plotly_chart(chart_layout_trend(fig, 365), use_container_width=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
     with c2:
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-        fig = go.Figure()
-        poliklinik = last_30["Toplam Hasta"] - last_30["Acil Hasta"]
-        fig.add_trace(go.Bar(x=last_30["Tarih"], y=poliklinik, name="Poliklinik Hasta", marker_color="#3b82f6"))
-        fig.add_trace(go.Bar(x=last_30["Tarih"], y=last_30["Acil Hasta"], name="Acil Hasta", marker_color="#ef4444"))
-        fig.add_trace(go.Scatter(x=last_30["Tarih"], y=last_30["Toplam Hasta"], name="Toplam Hasta", mode="lines+markers", line=dict(color="#e5eefb", width=3), marker=dict(size=5)))
-        fig.update_layout(title="Hasta Hacmi Trendi", barmode="stack")
-        fig.update_yaxes(title="Hasta Sayısı")
-        fig.update_xaxes(title="")
-        st.plotly_chart(chart_layout(fig, 390), use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown(
+            f"""
+            <div class="trend-panel">
+                <div class="trend-panel-title">
+                    <span>Hasta Hacmi Trendi</span>
+                    <span class="trend-info">i</span>
+                </div>
+                <div class="trend-stat-row two">
+                    <div class="trend-stat">
+                        <div class="trend-stat-label">Ort. Toplam Hasta</div>
+                        <div class="trend-stat-value">{int_fmt(avg_total_patient)}</div>
+                        <div class="trend-stat-sub"><span class="trend-up">↑ %8,7</span> · Önceki 30 güne göre</div>
+                    </div>
+                    <div class="trend-stat">
+                        <div class="trend-stat-label">Ort. Acil Hasta</div>
+                        <div class="trend-stat-value">{int_fmt(avg_emergency_patient)}</div>
+                        <div class="trend-stat-sub"><span class="trend-up">↑ %6,1</span> · Önceki 30 güne göre</div>
+                    </div>
+                </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
-    cols = st.columns(4)
-    with cols[0]: metric_card("👥", "i-blue", "Toplam Hasta", int_fmt(total_patient), "↑ %8,7", "Son 30 gün")
-    with cols[1]: metric_card("🚨", "i-red", "Acil Hasta", int_fmt(total_emergency), "↑ %6,1", "Son 30 gün")
-    with cols[2]: metric_card("📈", "i-green", "En Yoğun Gün", int_fmt(peak_patient_row["Toplam Hasta"]), "Toplam Hasta", pd.to_datetime(peak_patient_row["Tarih"]).strftime("%d %B %Y"))
-    with cols[3]: metric_card("🗓️", "i-orange", "En Yoğun Acil Gün", int_fmt(peak_emergency_row["Acil Hasta"]), "Acil Hasta", pd.to_datetime(peak_emergency_row["Tarih"]).strftime("%d %B %Y"))
+        poliklinik = last_30["Toplam Hasta"] - last_30["Acil Hasta"]
+        fig = go.Figure()
+        fig.add_trace(go.Bar(
+            x=last_30["Tarih"],
+            y=poliklinik,
+            name="Poliklinik Hasta",
+            marker_color="#3b82f6",
+        ))
+        fig.add_trace(go.Bar(
+            x=last_30["Tarih"],
+            y=last_30["Acil Hasta"],
+            name="Acil Hasta",
+            marker_color="#fb7185",
+        ))
+        fig.add_trace(go.Scatter(
+            x=last_30["Tarih"],
+            y=last_30["Toplam Hasta"],
+            name="Toplam Hasta",
+            mode="lines+markers",
+            line=dict(width=3, color="#e5eefb"),
+            marker=dict(size=5, color="#f8fafc"),
+        ))
+        fig.update_layout(barmode="stack")
+        fig.update_yaxes(title="Hasta Sayısı (Poliklinik + Acil)")
+        st.plotly_chart(chart_layout_trend(fig, 365), use_container_width=True)
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    st.markdown(
+        f"""
+        <div class="trend-bottom-row">
+            <div class="trend-bottom-item">
+                <div class="icon-circle i-blue">👥</div>
+                <div>
+                    <div class="trend-stat-label">Toplam Hasta</div>
+                    <div class="trend-stat-value">{int_fmt(total_patient)} <span class="trend-up" style="font-size:13px;">↑ %8,7</span></div>
+                    <div class="trend-stat-sub">Son 30 gün</div>
+                </div>
+            </div>
+            <div class="trend-bottom-item">
+                <div class="icon-circle i-red">🚨</div>
+                <div>
+                    <div class="trend-stat-label">Acil Hasta</div>
+                    <div class="trend-stat-value">{int_fmt(total_emergency)} <span class="trend-up" style="font-size:13px;">↑ %6,1</span></div>
+                    <div class="trend-stat-sub">Son 30 gün</div>
+                </div>
+            </div>
+            <div class="trend-bottom-item">
+                <div class="icon-circle i-green">📈</div>
+                <div>
+                    <div class="trend-stat-label">En Yoğun Gün</div>
+                    <div class="trend-stat-value"><span class="trend-green">{int_fmt(peak_patient_row["Toplam Hasta"])}</span></div>
+                    <div class="trend-stat-sub">Toplam Hasta · {date_long_tr(peak_patient_row["Tarih"])}</div>
+                </div>
+            </div>
+            <div class="trend-bottom-item">
+                <div class="icon-circle i-orange">🗓️</div>
+                <div>
+                    <div class="trend-stat-label">En Yoğun Acil Gün</div>
+                    <div class="trend-stat-value"><span style="color:#fb923c;">{int_fmt(peak_emergency_row["Acil Hasta"])}</span></div>
+                    <div class="trend-stat-sub">Acil Hasta · {date_long_tr(peak_emergency_row["Tarih"])}</div>
+                </div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
     b1, b2 = st.columns([1, 1])
     with b1:
@@ -704,6 +991,11 @@ def render_ceo_dashboard():
     render_question_cards("ceo")
 
 
+def go_to(module_name: str):
+    st.session_state["active_module"] = module_name
+    st.rerun()
+
+
 def render_question_cards(context="ceo"):
     st.markdown('<div class="section-title">Yönetici İçin Önerilen Sorular</div>', unsafe_allow_html=True)
 
@@ -716,16 +1008,16 @@ def render_question_cards(context="ceo"):
     top_complaint = kalite.sort_values("Şikayet Sayısı", ascending=False).iloc[0]
 
     cards = [
-        ("📈", "Bu ay ciro neden arttı?", f"Cevap: {top_rev['Branş']} branşında gelir artışı güçlü. Toplam ciroyu en çok bu branş destekliyor."),
-        ("🟣", "En kârlı branş hangisi?", f"Cevap: {top_profit['Branş']} yaklaşık {money_fmt(top_profit['Kar'])} kâr ile öne çıkıyor."),
-        ("🕘", "Bekleme süresi neden arttı?", f"Cevap: Hasta hacmi {int_fmt(today['Toplam Hasta'])} seviyesinde. Randevu kapasitesi ve yoğun branşlar birlikte incelenmeli."),
-        ("🙂", "Hasta memnuniyeti nasıl artırılır?", f"Cevap: En büyük şikayet konusu '{top_complaint['Konu']}'. Bu alanda çözüm süresi düşürülmeli."),
-        ("👨‍⚕️", "Hangi doktorlar öne çıkıyor?", f"Cevap: Gelirde {top_doc['Doktor']}, memnuniyette {top_satis['Doktor']} öne çıkıyor."),
-        ("🛡️", "Hangi alanlarda risk var?", f"Cevap: MR kullanımı {pct_fmt(today['MR Kullanım %'])}, doluluk {pct_fmt(today['Doluluk %'])}. Kapasite riski takip edilmeli."),
+        ("📈", "Bu ay ciro neden arttı?", f"Cevap: {top_rev['Branş']} branşında gelir artışı güçlü. Toplam ciroyu en çok bu branş destekliyor.", "Finans Merkezi"),
+        ("🟣", "En kârlı branş hangisi?", f"Cevap: {top_profit['Branş']} yaklaşık {money_fmt(top_profit['Kar'])} kâr ile öne çıkıyor.", "Finans Merkezi"),
+        ("🕘", "Bekleme süresi neden arttı?", f"Cevap: Hasta hacmi {int_fmt(today['Toplam Hasta'])} seviyesinde. Randevu kapasitesi ve yoğun branşlar birlikte incelenmeli.", "Operasyon"),
+        ("🙂", "Hasta memnuniyeti nasıl artırılır?", f"Cevap: En büyük şikayet konusu '{top_complaint['Konu']}'. Bu alanda çözüm süresi düşürülmeli.", "Kalite & Hasta Deneyimi"),
+        ("👨‍⚕️", "Hangi doktorlar öne çıkıyor?", f"Cevap: Gelirde {top_doc['Doktor']}, memnuniyette {top_satis['Doktor']} öne çıkıyor.", "Doktor Intelligence"),
+        ("🛡️", "Hangi alanlarda risk var?", f"Cevap: MR kullanımı {pct_fmt(today['MR Kullanım %'])}, doluluk {pct_fmt(today['Doluluk %'])}. Kapasite riski takip edilmeli.", "Operasyon"),
     ]
 
     cols = st.columns(3)
-    for i, (icon, title, ans) in enumerate(cards):
+    for i, (icon, title, ans, target) in enumerate(cards):
         with cols[i % 3]:
             st.markdown(
                 f"""
@@ -733,11 +1025,12 @@ def render_question_cards(context="ceo"):
                     <div class="icon-circle i-blue">{icon}</div>
                     <div class="q-title">{title}</div>
                     <div class="q-answer">{ans}</div>
-                    <div class="q-link">Detayları Gör →</div>
                 </div>
                 """,
                 unsafe_allow_html=True,
             )
+            if st.button(f"Detayları Gör → {target}", key=f"q_nav_{context}_{i}"):
+                go_to(target)
 
 
 # =========================================================
