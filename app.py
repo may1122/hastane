@@ -20,7 +20,7 @@ import plotly.express as px
 import streamlit as st
 
 
-APP_VERSION = "V1.0 SaaS Hospital Concept"
+APP_VERSION = "V1.1 Executive SaaS Hospital"
 
 NAV_ITEMS = [
     "CEO Dashboard",
@@ -31,7 +31,7 @@ NAV_ITEMS = [
     "Kalite & Hasta Deneyimi",
     "Hasta Analitiği",
     "Stok & Satın Alma",
-    "AYÇA Co-Pilot",
+    "AYÇA Intelligence",
 ]
 
 
@@ -705,6 +705,302 @@ st.markdown(
         font-size: 12px;
         line-height: 1.45;
     }
+
+    .executive-header {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 22px;
+        padding: 18px 20px;
+        margin-bottom: 14px;
+        box-shadow: 0 10px 30px rgba(15,23,42,.055);
+        display: grid;
+        grid-template-columns: 1.4fr .9fr .9fr .9fr .9fr;
+        gap: 14px;
+        align-items: center;
+    }
+
+    .eh-brand {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .eh-title {
+        color: #0f172a;
+        font-size: 24px;
+        font-weight: 950;
+        letter-spacing: -.7px;
+    }
+
+    .eh-sub {
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 750;
+    }
+
+    .eh-chip {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 12px 14px;
+        min-height: 68px;
+    }
+
+    .eh-label {
+        color: #64748b;
+        font-size: 11px;
+        font-weight: 850;
+        margin-bottom: 4px;
+    }
+
+    .eh-value {
+        color: #0f172a;
+        font-size: 18px;
+        font-weight: 950;
+        letter-spacing: -.3px;
+    }
+
+    .eh-alert {
+        color: #b91c1c;
+        background: #fff1f2;
+        border-color: #fecdd3;
+    }
+
+    .tabs-wrap {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        padding: 8px 10px 4px;
+        margin: 10px 0 18px;
+        box-shadow: 0 8px 22px rgba(15,23,42,.04);
+    }
+
+    .tab-active {
+        color: #1d4ed8;
+        font-weight: 950;
+        font-size: 13px;
+        text-align: center;
+        padding: 8px 2px 10px;
+        border-bottom: 3px solid #2563eb;
+        min-height: 40px;
+    }
+
+    .hero-ceo {
+        background: linear-gradient(135deg, #0f172a, #1e3a8a);
+        border-radius: 24px;
+        padding: 26px;
+        color: white;
+        margin-bottom: 16px;
+        box-shadow: 0 18px 42px rgba(15,23,42,.16);
+    }
+
+    .hero-title {
+        font-size: 34px;
+        font-weight: 950;
+        letter-spacing: -1px;
+        margin-bottom: 8px;
+    }
+
+    .hero-subtitle {
+        color: #dbeafe;
+        font-size: 15px;
+        line-height: 1.55;
+        max-width: 880px;
+    }
+
+    .decision-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 18px;
+        box-shadow: 0 10px 26px rgba(15,23,42,.05);
+        min-height: 178px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .decision-card:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 5px;
+        height: 100%;
+        background: #2563eb;
+    }
+
+    .decision-red:before { background: #ef4444; }
+    .decision-yellow:before { background: #f59e0b; }
+    .decision-green:before { background: #22c55e; }
+    .decision-purple:before { background: #7c3aed; }
+
+    .decision-kicker {
+        color: #64748b;
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing: .5px;
+        text-transform: uppercase;
+        margin-bottom: 7px;
+    }
+
+    .decision-title {
+        color: #0f172a;
+        font-size: 18px;
+        font-weight: 950;
+        margin-bottom: 7px;
+    }
+
+    .decision-value {
+        color: #0f172a;
+        font-size: 27px;
+        font-weight: 950;
+        letter-spacing: -.6px;
+        margin-bottom: 7px;
+    }
+
+    .decision-text {
+        color: #475569;
+        font-size: 13px;
+        line-height: 1.45;
+    }
+
+    .lost-revenue {
+        background: linear-gradient(135deg, #fff1f2, #ffffff);
+        border: 1px solid #fecdd3;
+        border-radius: 22px;
+        padding: 20px;
+        box-shadow: 0 10px 26px rgba(15,23,42,.05);
+    }
+
+    .lost-revenue-value {
+        color: #be123c;
+        font-size: 40px;
+        font-weight: 950;
+        letter-spacing: -1px;
+        line-height: 1;
+        margin: 8px 0;
+    }
+
+    .health-score-card {
+        background: linear-gradient(135deg, #eff6ff, #ffffff);
+        border: 1px solid #bfdbfe;
+        border-radius: 22px;
+        padding: 20px;
+        box-shadow: 0 10px 26px rgba(15,23,42,.05);
+    }
+
+    .health-score-big {
+        color: #1d4ed8;
+        font-size: 58px;
+        font-weight: 950;
+        letter-spacing: -2px;
+        line-height: .95;
+    }
+
+    .score-line {
+        margin: 11px 0;
+    }
+
+    .score-line-top {
+        color: #334155;
+        font-size: 12px;
+        font-weight: 850;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+    }
+
+    .score-track {
+        height: 8px;
+        background: #dbeafe;
+        border-radius: 999px;
+        overflow: hidden;
+    }
+
+    .score-fill {
+        height: 8px;
+        background: linear-gradient(90deg, #2563eb, #22c55e);
+        border-radius: 999px;
+    }
+
+    .why-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 18px;
+        box-shadow: 0 10px 26px rgba(15,23,42,.05);
+        min-height: 145px;
+    }
+
+    .why-title {
+        color: #0f172a;
+        font-size: 17px;
+        font-weight: 950;
+        margin-bottom: 7px;
+    }
+
+    .why-text {
+        color: #475569;
+        font-size: 13px;
+        line-height: 1.45;
+    }
+
+    .doctor-league-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 16px;
+        box-shadow: 0 8px 22px rgba(15,23,42,.045);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .league-medal {
+        width: 42px;
+        height: 42px;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        background: #eff6ff;
+        font-size: 22px;
+        margin-right: 12px;
+    }
+
+    .league-left {
+        display: flex;
+        align-items: center;
+    }
+
+    .league-name {
+        color: #0f172a;
+        font-weight: 950;
+        font-size: 15px;
+    }
+
+    .league-sub {
+        color: #64748b;
+        font-size: 12px;
+        margin-top: 3px;
+    }
+
+    .meeting-hero {
+        background: linear-gradient(135deg, #111827, #4338ca);
+        border-radius: 24px;
+        padding: 24px;
+        color: white;
+        margin-bottom: 16px;
+        box-shadow: 0 18px 42px rgba(15,23,42,.16);
+    }
+
+    .meeting-hero-title {
+        font-size: 30px;
+        font-weight: 950;
+        letter-spacing: -.8px;
+        margin-bottom: 8px;
+    }
+
 </style>
 """,
     unsafe_allow_html=True,
@@ -901,92 +1197,73 @@ peak_emergency_row = gunluk.loc[gunluk["Acil Hasta"].idxmax()]
 
 
 # =========================================================
-# Top Area
+# Global SaaS Header
 # =========================================================
-st.markdown(
-    f"""
-    <div class="top-strip">
-        <div class="top-item">
-            <div class="top-label">Hastane</div>
-            <div class="top-value">HG Hospital ▾</div>
-        </div>
-        <div class="top-item">
-            <div class="top-label">Tarih</div>
-            <div class="top-value">{date_long_tr(max_date)}</div>
-        </div>
-        <div class="top-item">
-            <div class="top-label">Doluluk Oranı</div>
-            <div class="top-value">{pct_fmt(today['Doluluk %'])}</div>
-        </div>
-        <div class="top-item">
-            <div class="top-label">Günlük Hasta</div>
-            <div class="top-value">{int_fmt(today['Toplam Hasta'])}</div>
-        </div>
-        <div class="top-item">
-            <div class="top-label">Acil Servis</div>
-            <div class="top-value">{int_fmt(today['Acil Hasta'])}</div>
-        </div>
-        <div class="top-item">
-            <div class="top-label">Risk Skoru</div>
-            <div class="top-value">{int(today['Risk Skoru'])} / 100</div>
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
-
-st.markdown(
-    """
-    <div class="concept-box">
-        <div class="concept-title">
-            <strong>V1.0 Konsept:</strong> Bu ekran hastane direktörü, genel müdür ve yönetim ekibinin sabah tek bakışta
-            hastanenin finansal, operasyonel ve kalite durumunu görmesi için tasarlanmıştır.
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
-
-# =========================================================
-# Persistent Module Bar
-# =========================================================
-def render_module_bar():
+def render_global_header():
     st.markdown(
-        '<div class="module-bar-wrap"><div class="module-bar-title">Modül Geçişleri</div>',
+        f"""
+        <div class="executive-header">
+            <div class="eh-brand">
+                <div class="eh-title">AYÇA Insight Hospital</div>
+                <div class="eh-sub">Executive Intelligence Platform · HG Hospital</div>
+            </div>
+            <div class="eh-chip">
+                <div class="eh-label">Son Güncelleme</div>
+                <div class="eh-value">{date_long_tr(max_date)}</div>
+            </div>
+            <div class="eh-chip">
+                <div class="eh-label">Sağlık Skoru</div>
+                <div class="eh-value">{int(today['Risk Skoru'])}/100</div>
+            </div>
+            <div class="eh-chip eh-alert">
+                <div class="eh-label">Kritik Uyarı</div>
+                <div class="eh-value">3 Aktif</div>
+            </div>
+            <div class="eh-chip">
+                <div class="eh-label">Kullanıcı</div>
+                <div class="eh-value">Ahmet Bey</div>
+            </div>
+        </div>
+        """,
         unsafe_allow_html=True,
     )
 
+
+render_global_header()
+
+
+# =========================================================
+# Persistent Module Tabs
+# =========================================================
+def render_module_bar():
+    st.markdown('<div class="tabs-wrap">', unsafe_allow_html=True)
+
     nav_cards = [
-        ("🏠", "CEO Dashboard"),
-        ("💰", "Finans Merkezi"),
-        ("👨‍⚕️", "Doktor Intelligence"),
-        ("🏥", "Operasyon"),
-        ("🎯", "Yönetim Toplantısı"),
-        ("🙂", "Kalite & Hasta Deneyimi"),
-        ("👥", "Hasta Analitiği"),
-        ("📦", "Stok & Satın Alma"),
-        ("🤖", "AYÇA Co-Pilot"),
+        ("CEO", "CEO Dashboard"),
+        ("Finans", "Finans Merkezi"),
+        ("Doktor", "Doktor Intelligence"),
+        ("Operasyon", "Operasyon"),
+        ("Toplantı", "Yönetim Toplantısı"),
+        ("Hasta", "Kalite & Hasta Deneyimi"),
+        ("Analitik", "Hasta Analitiği"),
+        ("Stok", "Stok & Satın Alma"),
+        ("Intelligence", "AYÇA Intelligence"),
     ]
 
-    cols = st.columns(9)
-    for i, (icon, title) in enumerate(nav_cards):
+    cols = st.columns(len(nav_cards))
+    for i, (label, title) in enumerate(nav_cards):
         with cols[i]:
             if st.session_state.active_page == title:
-                st.markdown(
-                    f'<div class="module-active-label">{icon} {title}</div>',
-                    unsafe_allow_html=True,
-                )
+                st.markdown(f'<div class="tab-active">{label}</div>', unsafe_allow_html=True)
             else:
-                short_title = title.replace("Kalite & Hasta Deneyimi", "Hasta Deneyimi").replace("Doktor Intelligence", "Doktor").replace("Yönetim Toplantısı", "Toplantı").replace("Stok & Satın Alma", "Stok")
-                if st.button(f"{icon} {short_title}", key=f"module_bar_{title}", use_container_width=True):
+                if st.button(label, key=f"tab_{title}", use_container_width=True):
                     goto(title)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
 
-
-
 render_module_bar()
+
 
 # =========================================================
 # Question cards
@@ -1037,7 +1314,7 @@ def render_question_cards(context="main"):
 # Pages
 # =========================================================
 def render_ceo_dashboard():
-    section_header("CEO Dashboard", "Yönetici Özeti")
+    section_header("CEO Dashboard", "Yönetici Karar Merkezi")
 
     st.markdown(
         f"""
@@ -1052,26 +1329,30 @@ def render_ceo_dashboard():
         unsafe_allow_html=True,
     )
 
-    score_left, score_right = st.columns([1, 2])
-    with score_left:
+    exec_left, exec_right = st.columns([1.05, 1.6])
+    with exec_left:
         st.markdown(
             f"""
-            <div class="score-card">
-                <div class="metric-label">HG Hospital Sağlık Skoru</div>
-                <div class="score-big">{int(today['Risk Skoru'])}/100</div>
-                <div class="metric-note">Finans, operasyon, kalite ve hasta deneyimi birleşik skoru</div>
+            <div class="lost-revenue">
+                <div class="decision-kicker">Bugün tahmini kaybedilen gelir</div>
+                <div class="lost-revenue-value">742 B TL</div>
+                <div class="decision-text">
+                    Tahmini nedenler: MR kapasite baskısı, randevu kaymaları ve yoğun saatlerde bekleme kaynaklı iptaller.
+                </div>
             </div>
             """,
             unsafe_allow_html=True,
         )
-    with score_right:
+    with exec_right:
         st.markdown(
             f"""
-            <div class="score-card">
-                <div class="progress-row"><div class="progress-label"><span>Finans</span><span>90</span></div><div class="progress-track"><div class="progress-fill" style="width:90%;"></div></div></div>
-                <div class="progress-row"><div class="progress-label"><span>Operasyon</span><span>76</span></div><div class="progress-track"><div class="progress-fill" style="width:76%;"></div></div></div>
-                <div class="progress-row"><div class="progress-label"><span>Kalite</span><span>82</span></div><div class="progress-track"><div class="progress-fill" style="width:82%;"></div></div></div>
-                <div class="progress-row"><div class="progress-label"><span>Memnuniyet</span><span>{int(today['Memnuniyet %'])}</span></div><div class="progress-track"><div class="progress-fill" style="width:{int(today['Memnuniyet %'])}%;"></div></div></div>
+            <div class="health-score-card">
+                <div class="decision-kicker">HG Hospital Sağlık Skoru</div>
+                <div class="health-score-big">{int(today['Risk Skoru'])}/100</div>
+                <div class="score-line"><div class="score-line-top"><span>Finans</span><span>90</span></div><div class="score-track"><div class="score-fill" style="width:90%;"></div></div></div>
+                <div class="score-line"><div class="score-line-top"><span>Operasyon</span><span>76</span></div><div class="score-track"><div class="score-fill" style="width:76%;"></div></div></div>
+                <div class="score-line"><div class="score-line-top"><span>Kalite</span><span>82</span></div><div class="score-track"><div class="score-fill" style="width:82%;"></div></div></div>
+                <div class="score-line"><div class="score-line-top"><span>Memnuniyet</span><span>{int(today['Memnuniyet %'])}</span></div><div class="score-track"><div class="score-fill" style="width:{int(today['Memnuniyet %'])}%;"></div></div></div>
             </div>
             """,
             unsafe_allow_html=True,
@@ -1178,6 +1459,16 @@ def render_ceo_dashboard():
 def render_management_meeting():
     section_header("Yönetim Toplantısı", "Haftalık yönetici özeti ve aksiyon listesi")
 
+    st.markdown(
+        """
+        <div class="meeting-hero">
+            <div class="meeting-hero-title">Bu hafta yönetim kuruluna ne sunulmalı?</div>
+            <div class="hero-subtitle">AYÇA bu sayfada veriyi toplantı diline çevirir: büyüme, risk, fırsat ve aksiyon.</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
     brans_sum = brans.groupby("Branş", as_index=False).agg(Gelir=("Gelir", "sum"), Kar=("Kar", "sum"), Hasta=("Hasta", "sum"))
     top_rev = brans_sum.sort_values("Gelir", ascending=False).iloc[0]
     top_profit = brans_sum.sort_values("Kar", ascending=False).iloc[0]
@@ -1239,6 +1530,19 @@ def render_finance():
     with cols[3]: metric_card("💵", "i-orange", "Nakit Gelir", money_fmt(gunluk["Nakit Gelir"].sum()), "Kanal", "Son 30 gün")
 
     brans_sum = brans.groupby("Branş", as_index=False).agg(Gelir=("Gelir", "sum"), Kar=("Kar", "sum"), Hasta=("Hasta", "sum"), Memnuniyet=("Memnuniyet %", "mean"))
+    top_rev_tmp = brans_sum.sort_values("Gelir", ascending=False).iloc[0]
+    top_profit_tmp = brans_sum.sort_values("Kar", ascending=False).iloc[0]
+    low_profit_tmp = brans_sum.sort_values("Kar", ascending=True).iloc[0]
+
+    st.markdown('<div class="section-title">Neden Kazandık / Nerede Kaçırıyoruz?</div>', unsafe_allow_html=True)
+    why_cols = st.columns(3)
+    with why_cols[0]:
+        st.markdown(f'<div class="why-card"><div class="why-title">En güçlü gelir motoru</div><div class="why-text">{top_rev_tmp["Branş"]} toplamda {money_fmt(top_rev_tmp["Gelir"])} gelir üretti. Bu branş kapasite artırımı için izlenebilir.</div></div>', unsafe_allow_html=True)
+    with why_cols[1]:
+        st.markdown(f'<div class="why-card"><div class="why-title">En güçlü kârlılık</div><div class="why-text">{top_profit_tmp["Branş"]} {money_fmt(top_profit_tmp["Kar"])} kâr ile öne çıkıyor. Paket ve sigorta karması incelenmeli.</div></div>', unsafe_allow_html=True)
+    with why_cols[2]:
+        st.markdown(f'<div class="why-card"><div class="why-title">İyileştirme alanı</div><div class="why-text">{low_profit_tmp["Branş"]} kârlılıkta geride. Hasta başı gelir, tetkik dönüşümü ve fiyatlama kontrol edilmeli.</div></div>', unsafe_allow_html=True)
+
     brans_sum["Hasta Başı Gelir"] = brans_sum["Gelir"] / brans_sum["Hasta"]
 
     c1, c2 = st.columns(2)
@@ -1420,7 +1724,7 @@ def render_stock():
 
 
 def render_copilot():
-    section_header("AYÇA Veri Asistanı", "Serbest soru yok; sadece veriden cevaplanabilen seçmeli analizler")
+    section_header("AYÇA Intelligence", "Kontrollü veri asistanı · sadece cevaplanabilir analizler")
 
     brans_sum = brans.groupby("Branş", as_index=False).agg(
         Gelir=("Gelir", "sum"),
@@ -1710,7 +2014,7 @@ elif page == "Hasta Analitiği":
     render_patients()
 elif page == "Stok & Satın Alma":
     render_stock()
-elif page == "AYÇA Co-Pilot":
+elif page == "AYÇA Intelligence":
     render_copilot()
 
 
